@@ -15,9 +15,9 @@ app.secret_key = "f3f46b84345dea28c1a294a3"
 @app.route("/", methods=["GET", "POST"])
 def home_page():
 	return make_response({"test":"this is test end point"})
-
-@app.route("/schedule", methods=["GET","POST","DELETE"])
-def set_schedule():
+@app.route("/schedule/", methods=["GET","POST","PUT","DELETE"])
+@app.route("/schedule/<ins_id>", methods=["GET"])
+def set_schedule(ins_id=None):
 	if request.method == "POST":
 		data = request.get_json(force=True)
 		task = data.get("task")
@@ -26,6 +26,16 @@ def set_schedule():
 		print(data)
 		url = "https://gvlm1oa781.execute-api.ap-south-1.amazonaws.com/default/instanceScheduler"
 		req = requests.post(url,json={"task":task, "instanceId":instanceId,"days":days})
+		print(req.text)
+		print(data)
+	if request.method == "PUT":
+		data = request.get_json(force=True)
+		task = data.get("task")
+		days = data.get("days")
+		instanceId = data.get("instanceId")
+		print(data)
+		url = "https://gvlm1oa781.execute-api.ap-south-1.amazonaws.com/default/instanceScheduler"
+		req = requests.put(url,json={"task":task, "instanceId":instanceId,"days":days})
 		print(req.text)
 		print(data)
 		
